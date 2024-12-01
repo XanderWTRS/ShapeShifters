@@ -87,7 +87,6 @@ public class GameScreen implements Screen {
             player.update(Gdx.graphics.getDeltaTime());
 
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            shapeRenderer.setColor(Color.RED); //COLOR of CHARACTER
             player.render(shapeRenderer);
             shapeRenderer.end();
 
@@ -97,6 +96,10 @@ public class GameScreen implements Screen {
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             togglePause();
+        }
+        if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE))
+        {
+            player.switchShape();
         }
     }
 
