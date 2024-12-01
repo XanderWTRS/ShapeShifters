@@ -28,7 +28,9 @@ public class MainGame extends ApplicationAdapter
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        //
         player.update(Gdx.graphics.getDeltaTime());
+        //
         player.render(shapeRenderer);
         shapeRenderer.end();
     }
