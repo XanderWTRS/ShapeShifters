@@ -1,48 +1,121 @@
 package com.Xander.shapeshifters;
 
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Align;
 
 public class GameScreen implements Screen {
-    private ShapeRenderer shapeRenderer;
+
+    private final MainGame game;
+    private Stage stage;
+    private Skin skin;
+    private boolean isPaused;
+    private Table table;
     private Player player;
 
+    private ShapeRenderer shapeRenderer;
+
     public GameScreen(MainGame game) {
-        // Initialize ShapeRenderer and Player here
-        shapeRenderer = new ShapeRenderer();
-        player = new Player(100, 100, 50, 50);  // Set initial player position and size
+        this.game = game;
     }
 
     @Override
     public void show() {
-        // Called when the screen is displayed
+        stage = new Stage();
+        Gdx.input.setInputProcessor(stage);
+        skin = new Skin(Gdx.files.internal("uiskin.json"));
+
+        player = new Player(100, 100, 50, 50);
+
+        table = new Table();
+        table.top().left();
+        table.setFillParent(true);
+
+
+        TextButton resumeButton = new TextButton("Resume Game", skin);
+        resumeButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                resumeGame();
+            }
+        });
+
+        TextButton settingsButton = new TextButton("Settings", skin);
+        settingsButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                //TODO settings
+            }
+        });
+
+        TextButton mainMenuButton = new TextButton("Back to Main Menu", skin);
+        mainMenuButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                game.setScreen(new MainMenuScreen(game));
+            }
+        });
+
+        table.center();
+        table.add(resumeButton).fillX().uniformX().pad(10);
+        table.row().pad(10);
+        table.add(settingsButton).fillX().uniformX().pad(10);
+        table.row().pad(10);
+        table.add(mainMenuButton).fillX().uniformX().pad(10);
+
+        table.setVisible(false);
+        stage.addActor(table);
+        shapeRenderer = new ShapeRenderer();
     }
 
     @Override
-    public void render(float delta) {
-        // Clear the screen
+    public void render(float delta)
+    {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        // Update the player
-        player.update(Gdx.graphics.getDeltaTime());
+        if (isPaused) {
 
-        // Render the player
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        player.render(shapeRenderer);  // This calls the Player's render method
-        shapeRenderer.end();
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            shapeRenderer.setColor(0, 0, 0, 0.5f);
+            shapeRenderer.rect(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+            shapeRenderer.end();
+
+            stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
+            stage.draw();
+        }
+        else
+        {
+
+            player.update(Gdx.graphics.getDeltaTime());
+
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            player.render(shapeRenderer);
+            shapeRenderer.end();
+
+            stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
+            stage.draw();
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            togglePause();
+        }
     }
 
     @Override
     public void resize(int width, int height) {
-        // Resize handling if needed
+        stage.getViewport().update(width, height, true);
     }
 
     @Override
     public void hide() {
-        // Dispose resources when hiding the screen
+        stage.dispose();
         shapeRenderer.dispose();
     }
 
@@ -54,6 +127,16 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
-        // Dispose any other resources
+        skin.dispose();
+    }
+
+    private void togglePause() {
+        isPaused = !isPaused;
+        table.setVisible(isPaused);
+    }
+
+    private void resumeGame() {
+        isPaused = false;
+        table.setVisible(false);
     }
 }
