@@ -46,9 +46,7 @@ public class Player
         position.x = MathUtils.clamp(position.x, 0, screenWidth - width);
         position.y = MathUtils.clamp(position.y, 0, screenHeight - height);
     }
-    public void render(ShapeRenderer shapeRenderer)
-    {
-        shapeRenderer.setColor(1, 1, 1, 1);
+    public void render(ShapeRenderer shapeRenderer) {
         shapeRenderer.rect(position.x, position.y, width, height);
     }
 
