@@ -21,6 +21,7 @@ public class GameScreen implements Screen {
     private Player player;
 
     private ShapeRenderer shapeRenderer;
+    private FinishPoint finishPoint;
 
     public GameScreen(MainGame game) {
         this.game = game;
@@ -33,6 +34,7 @@ public class GameScreen implements Screen {
         skin = new Skin(Gdx.files.internal("uiskin.json"));
 
         player = new Player(100, 100, 50, 50);
+        finishPoint = new FinishPoint(1500, 800, 100,100);
 
         table = new Table();
         table.top().left();
@@ -88,6 +90,7 @@ public class GameScreen implements Screen {
 
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
             player.render(shapeRenderer);
+            finishPoint.render(shapeRenderer);
             shapeRenderer.end();
 
             stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
@@ -100,6 +103,10 @@ public class GameScreen implements Screen {
         if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE))
         {
             player.switchShape();
+        }
+        if(finishPoint.checkCollision(player.getPosition().x, player.getPosition().y, player.getWidth(), player.getHeight()))
+        {
+            game.setScreen(new MainMenuScreen(game));
         }
     }
 
