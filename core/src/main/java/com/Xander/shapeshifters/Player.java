@@ -1,5 +1,6 @@
 package com.Xander.shapeshifters;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -16,10 +17,9 @@ public class Player {
     private float dashDistance;
     public boolean canDash;
     private ShapeType currentShape;
-    private float dashCooldownTime = 0.2f;  // How long to wait before dashing again (in seconds)
-    private float dashCooldownTimer = 0f;   // Timer to track the cooldown
-
-
+    private float dashCooldownTime = 0.2f;
+    private float dashCooldownTimer = 0f;
+    private Sound dashSound;
 
     public Player(float x, float y, float width, float height) {
         this.position = new Vector2(x, y);
@@ -29,6 +29,7 @@ public class Player {
         this.dashDistance = 300;
         this.canDash = true;
         this.currentShape = ShapeType.SQUARE;
+        dashSound = Gdx.audio.newSound(Gdx.files.internal("sounds/dash_sound.mp3"));
     }
 
     public void update(float deltaTime, List<Water> waterBlocks) {
@@ -39,7 +40,7 @@ public class Player {
         }
 
         if (dashCooldownTimer > 0) {
-            dashCooldownTimer -= deltaTime;  // Decrease the cooldown timer
+            dashCooldownTimer -= deltaTime;
         }
 
         float velocityX = 0;
@@ -58,17 +59,14 @@ public class Player {
             velocityY = -speed * deltaTime;
         }
 
-        // Check if the new position will cause a collision with water
         if (isCollidingWithWater(position.x + velocityX, position.y + velocityY, waterBlocks)) {
-            velocityX = 0;  // Prevent horizontal movement
-            velocityY = 0;  // Prevent vertical movement
+            velocityX = 0;
+            velocityY = 0;
         }
 
-        // Update the position with the velocity
         position.x += velocityX;
         position.y += velocityY;
 
-        // Clamp the position to the screen boundaries
         float screenWidth = 1920;
         float screenHeight = 1080;
         position.x = MathUtils.clamp(position.x, 0, screenWidth - width);
@@ -78,20 +76,20 @@ public class Player {
     public void render(ShapeRenderer shapeRenderer) {
         switch (currentShape) {
             case SQUARE:
-                shapeRenderer.setColor(1, 0, 0, 1);
+                shapeRenderer.setColor(1, 0, 0, 1); // Red
                 shapeRenderer.rect(position.x, position.y, width, height);
                 break;
             case CIRCLE:
                 shapeRenderer.setColor(0, 1, 0, 1); // Green
-                shapeRenderer.circle(position.x + width / 2, position.y + height / 2, width / 2); // Draw circle
+                shapeRenderer.circle(position.x + width / 2, position.y + height / 2, width / 2);
                 break;
             case TRIANGLE:
                 shapeRenderer.setColor(0, 0, 1, 1); // Blue
-                shapeRenderer.triangle(position.x, position.y, position.x + width, position.y, position.x + width / 2, position.y + height); // Draw triangle
+                shapeRenderer.triangle(position.x, position.y, position.x + width, position.y, position.x + width / 2, position.y + height);
                 break;
             case STAR:
                 shapeRenderer.setColor(1, 1, 0, 1); // Yellow
-                drawStar(shapeRenderer); // Custom method to draw a star
+                drawStar(shapeRenderer);
                 break;
         }
     }
@@ -99,10 +97,10 @@ public class Player {
     public boolean isCollidingWithWater(float newX, float newY, List<Water> waterBlocks) {
         for (Water water : waterBlocks) {
             if (water.checkCollision(newX, newY, width, height)) {
-                return true;  // Return true if there's a collision
+                return true;
             }
         }
-        return false;  // No collision
+        return false;
     }
 
     private void drawStar(ShapeRenderer shapeRenderer) {
@@ -131,26 +129,28 @@ public class Player {
         float velocityX = 0;
         float velocityY = 0;
 
-        // Calculate direction based on movement
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)) {
-            velocityX = -dashDistance;  // Dash to the left
+            velocityX = -dashDistance;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)) {
-            velocityX = dashDistance;   // Dash to the right
+            velocityX = dashDistance;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.W)) {
-            velocityY = dashDistance;   // Dash up
+            velocityY = dashDistance;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.S)) {
-            velocityY = -dashDistance;  // Dash down
+            velocityY = -dashDistance;
         }
 
-        // Move the player in the calculated direction
         position.x += velocityX;
         position.y += velocityY;
 
-        // Disable dashing until it resets
-        canDash = false; // Disable dashing until reset
+        if(dashSound != null)
+        {
+            dashSound.play();
+        }
+
+        canDash = false;
     }
 
     public Vector2 getPosition()

@@ -14,8 +14,8 @@ public class Water
     }
 
     public void render(ShapeRenderer shapeRenderer) {
-        shapeRenderer.setColor(0, 0, 1, 1);  // Blue for water
-        shapeRenderer.rect(x, y, width, height);  // Draw the water rectangle
+        shapeRenderer.setColor(0, 0, 1, 1);
+        shapeRenderer.rect(x, y, width, height);
     }
 
     public boolean checkCollision(float playerX, float playerY, float playerWidth, float playerHeight) {

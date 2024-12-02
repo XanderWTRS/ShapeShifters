@@ -120,18 +120,15 @@ public class GameScreen implements Screen {
             player.switchShape();
         }
 
-        // Check if player reached finish point
         if (finishPoint.checkCollision(player.getPosition().x, player.getPosition().y, player.getWidth(), player.getHeight())) {
             game.setScreen(new MainMenuScreen(game));
         }
 
-        // Dash input handling
         if (player.getCurrentShape().equals(ShapeType.TRIANGLE) && Gdx.input.isKeyJustPressed(Input.Keys.Q) && player.getDashCooldownTimer() <= 0) {
-            // Dash cooldown check
+
             float dashX = player.getPosition().x;
             float dashY = player.getPosition().y;
 
-            // Calculate new position after dash based on input direction
             if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)) {
                 dashX -= player.getDashDistance();
             }
@@ -145,31 +142,29 @@ public class GameScreen implements Screen {
                 dashY -= player.getDashDistance();
             }
 
-            // Check for collisions with water before allowing the dash
             boolean canDash = true;
             for (Water water : waterBlocks) {
                 if (water.checkCollision(dashX, dashY, player.getWidth(), player.getHeight())) {
                     canDash = false;
-                    break;  // Exit loop if collision is detected
+                    break;
                 }
             }
 
             if (canDash) {
                 player.dashForward();
-                player.startDashCooldown();  // Start cooldown after a successful dash
+                player.startDashCooldown();
             }
         }
     }
 
 
     private boolean isCollidingWithWater(float newX, float newY) {
-        // Check if the new position of the player (after the movement) collides with any water blocks
         for (Water water : waterBlocks) {
             if (water.checkCollision(newX, newY, player.getWidth(), player.getHeight())) {
-                return true;  // Collision detected
+                return true;
             }
         }
-        return false;  // No collision
+        return false;
     }
 
     @Override
