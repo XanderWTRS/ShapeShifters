@@ -68,7 +68,7 @@ public class MainMenuScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor)
             {
-                //TODO settings
+                game.setScreen(new SettingsScreen(game));
             }
         });
 
