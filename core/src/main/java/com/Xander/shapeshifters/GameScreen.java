@@ -39,8 +39,7 @@ public class GameScreen implements Screen {
         skin = new Skin(Gdx.files.internal("uiskin.json"));
 
         level1Music = Gdx.audio.newMusic(Gdx.files.internal("sounds/level1_theme.mp3"));
-        level1Music.setLooping(true);
-        level1Music.play();
+        AudioManager.playMusic(level1Music, true);
 
         player = new Player(100, 100, 50, 50);
         finishPoint = new FinishPoint(1500, 800, 100, 100);
@@ -60,15 +59,6 @@ public class GameScreen implements Screen {
             }
         });
 
-        TextButton settingsButton = new TextButton("Settings", skin);
-        settingsButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                game.setPreviousScreen(game.getScreen());
-                game.setScreen(new SettingsScreen(game));
-            }
-        });
-
         TextButton mainMenuButton = new TextButton("Back to Main Menu", skin);
         mainMenuButton.addListener(new ChangeListener() {
             @Override
@@ -80,15 +70,11 @@ public class GameScreen implements Screen {
         table.center();
         table.add(resumeButton).fillX().uniformX().pad(10);
         table.row().pad(10);
-        table.add(settingsButton).fillX().uniformX().pad(10);
-        table.row().pad(10);
         table.add(mainMenuButton).fillX().uniformX().pad(10);
 
         table.setVisible(isPaused);
         stage.addActor(table);
         shapeRenderer = new ShapeRenderer();
-
-
     }
 
     @Override
