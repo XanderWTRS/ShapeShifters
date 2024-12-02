@@ -64,7 +64,8 @@ public class GameScreen implements Screen {
         settingsButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                //TODO settings
+                game.setPreviousScreen(game.getScreen());
+                game.setScreen(new SettingsScreen(game));
             }
         });
 
@@ -83,9 +84,11 @@ public class GameScreen implements Screen {
         table.row().pad(10);
         table.add(mainMenuButton).fillX().uniformX().pad(10);
 
-        table.setVisible(false);
+        table.setVisible(isPaused);
         stage.addActor(table);
         shapeRenderer = new ShapeRenderer();
+
+
     }
 
     @Override
@@ -194,7 +197,7 @@ public class GameScreen implements Screen {
         skin.dispose();
     }
 
-    private void togglePause() {
+    void togglePause() {
         isPaused = !isPaused;
         table.setVisible(isPaused);
     }

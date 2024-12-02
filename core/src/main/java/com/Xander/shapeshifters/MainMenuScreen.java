@@ -68,6 +68,7 @@ public class MainMenuScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor)
             {
+                game.setPreviousScreen(game.getScreen());
                 game.setScreen(new SettingsScreen(game));
             }
         });

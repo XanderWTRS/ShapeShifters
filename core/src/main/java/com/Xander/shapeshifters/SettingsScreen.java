@@ -56,7 +56,11 @@ public class SettingsScreen implements Screen
         backButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(new MainMenuScreen(game));
+                if(game.getPreviousScreen() instanceof GameScreen)
+                {
+                    ((GameScreen) game.getPreviousScreen()).togglePause();
+                }
+                game.setScreen(game.getPreviousScreen());
             }
         });
 
