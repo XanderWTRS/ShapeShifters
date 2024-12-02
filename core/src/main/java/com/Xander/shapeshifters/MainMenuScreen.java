@@ -35,8 +35,7 @@ public class MainMenuScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
 
         mainMenuMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/main_menu_theme.mp3"));
-        mainMenuMusic.setLooping(true);
-        mainMenuMusic.play();
+        AudioManager.playMusic(mainMenuMusic, true);
 
         skin = new Skin(Gdx.files.internal("uiskin.json"));
         backgroundTexture = new Texture(Gdx.files.internal("background.png"));

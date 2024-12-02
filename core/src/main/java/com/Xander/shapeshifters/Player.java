@@ -145,10 +145,8 @@ public class Player {
         position.x += velocityX;
         position.y += velocityY;
 
-        if(dashSound != null)
-        {
-            dashSound.play();
-        }
+        dashSound = Gdx.audio.newSound(Gdx.files.internal("sounds/dash_sound.mp3"));
+        AudioManager.playSound(dashSound);
 
         canDash = false;
     }
