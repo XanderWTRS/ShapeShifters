@@ -2,6 +2,7 @@ package com.Xander.shapeshifters;
 
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -22,6 +23,7 @@ public class MainMenuScreen implements Screen {
     private BitmapFont normalFont;
     private BitmapFont textFont;
     private Texture backgroundTexture;
+    private Music mainMenuMusic;
 
     public MainMenuScreen(MainGame game) {
         this.game = game;
@@ -31,6 +33,10 @@ public class MainMenuScreen implements Screen {
     public void show() {
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
+
+        mainMenuMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/main_menu_theme.mp3"));
+        mainMenuMusic.setLooping(true);
+        mainMenuMusic.play();
 
         skin = new Skin(Gdx.files.internal("uiskin.json"));
         backgroundTexture = new Texture(Gdx.files.internal("background.png"));
@@ -112,8 +118,13 @@ public class MainMenuScreen implements Screen {
     }
 
     @Override
-    public void hide() {
-        dispose();
+    public void hide()
+    {
+        if(mainMenuMusic != null)
+        {
+            mainMenuMusic.stop();
+            mainMenuMusic.dispose();
+        }
     }
 
     @Override

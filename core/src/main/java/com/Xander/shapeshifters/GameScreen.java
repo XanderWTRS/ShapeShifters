@@ -3,6 +3,7 @@ package com.Xander.shapeshifters;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -24,6 +25,7 @@ public class GameScreen implements Screen {
     private List<Water> waterBlocks;
     private ShapeRenderer shapeRenderer;
     private FinishPoint finishPoint;
+    private Music level1Music;
 
     public GameScreen(MainGame game) {
         this.game = game;
@@ -35,6 +37,10 @@ public class GameScreen implements Screen {
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
         skin = new Skin(Gdx.files.internal("uiskin.json"));
+
+        level1Music = Gdx.audio.newMusic(Gdx.files.internal("sounds/level1_theme.mp3"));
+        level1Music.setLooping(true);
+        level1Music.play();
 
         player = new Player(100, 100, 50, 50);
         finishPoint = new FinishPoint(1500, 800, 100, 100);
@@ -175,6 +181,11 @@ public class GameScreen implements Screen {
     public void hide() {
         stage.dispose();
         shapeRenderer.dispose();
+        if(level1Music != null)
+        {
+            level1Music.stop();
+            level1Music.dispose();
+        }
     }
 
     @Override
