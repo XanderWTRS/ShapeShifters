@@ -2,8 +2,10 @@ package com.Xander.shapeshifters;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -16,6 +18,7 @@ public class SettingsScreen implements Screen
     private Stage stage;
     private Skin skin;
     private BitmapFont titleFont;
+    private BitmapFont extraTitleFont;
 
     public SettingsScreen(MainGame game)
     {
@@ -32,7 +35,14 @@ public class SettingsScreen implements Screen
         table.setFillParent(true);
         stage.addActor(table);
 
-        Label musicVolumeLabel = new Label("Music Volume", skin);
+        titleFont = generateFont("fonts/TitleFont.ttf", 30);
+        extraTitleFont = generateFont("fonts/TitleFont.ttf", 80);
+        Label.LabelStyle titleStyle = new Label.LabelStyle(titleFont, Color.BLACK);
+        Label.LabelStyle extraTitleStyle = new Label.LabelStyle(extraTitleFont, Color.BLACK);
+
+        Label titleLabel = new Label("Settings", extraTitleStyle);
+
+        Label musicVolumeLabel = new Label("Music Volume", titleStyle);
         final Slider musicVolumeSlider = new Slider(0, 1, 0.1f, false, skin);
         musicVolumeSlider.setValue(AudioManager.getMusicVolume());
         musicVolumeSlider.addListener(new ChangeListener() {
@@ -42,7 +52,7 @@ public class SettingsScreen implements Screen
             }
         });
 
-        Label soundVolumeLabel = new Label("Sound Volume", skin);
+        Label soundVolumeLabel = new Label("Sound Volume", titleStyle);
         final Slider soundVolumeSlider = new Slider(0, 1, 0.1f, false, skin);
         soundVolumeSlider.setValue(AudioManager.getSoundVolume());
         soundVolumeSlider.addListener(new ChangeListener() {
@@ -64,6 +74,8 @@ public class SettingsScreen implements Screen
             }
         });
 
+        table.add(titleLabel).pad(10).padBottom(120).padTop(-100);
+        table.row();
         table.add(musicVolumeLabel).pad(10);
         table.row();
         table.add(musicVolumeSlider).width(300).pad(10);
@@ -77,7 +89,7 @@ public class SettingsScreen implements Screen
 
     @Override
     public void render(float v) {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
@@ -107,5 +119,14 @@ public class SettingsScreen implements Screen
     public void dispose() {
         stage.dispose();
         skin.dispose();
+    }
+
+    private BitmapFont generateFont(String fontPath, int size) {
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(fontPath));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = size;
+        BitmapFont font = generator.generateFont(parameter);
+        generator.dispose();
+        return font;
     }
 }
