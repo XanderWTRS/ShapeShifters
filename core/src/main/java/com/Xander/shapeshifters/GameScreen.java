@@ -68,9 +68,9 @@ public class GameScreen implements Screen {
         });
 
         table.center();
-        table.add(resumeButton).fillX().uniformX().pad(10);
+        table.add(resumeButton).fillX().uniformX().pad(10).height(50).width(400);
         table.row().pad(10);
-        table.add(mainMenuButton).fillX().uniformX().pad(10);
+        table.add(mainMenuButton).fillX().uniformX().pad(10).height(50).width(400);
 
         table.setVisible(isPaused);
         stage.addActor(table);
